@@ -39,10 +39,8 @@ jobs:
             -Dandroid-strict=false \
             -Db_lto=true
           ninja -C "build-android-turnip" install
-          mkdir /tmp/mesa/toupload
-          mv /tmp/mesa/lib/libvulkan_freedreno.so /tmp/mesa/toupload/
       - name: Upload libraries
         uses: actions/upload-artifact@v4
         with:
           name: UMP_${{matrix.arch}}
-          path: /tmp/mesa/toupload/libvulkan_freedreno.so
+          path: /tmp/mesa/lib/libvulkan_freedreno.so
