@@ -801,6 +801,10 @@ a7xx_730 = A7XXProps(
         supports_ibo_ubwc = True,
     )
 
+a7xx_735 = A7XXProps(
+        supports_ibo_ubwc = True,
+    )
+
 a7xx_740 = A7XXProps(
         stsc_duplication_quirk = True,
         has_event_write_sample_count = True,
@@ -909,6 +913,24 @@ add_gpus([
     ], A6xxGPUInfo(
         CHIP.A7XX,
         [a7xx_base, a7xx_730],
+        num_ccu = 4,
+        tile_align_w = 64,
+        tile_align_h = 32,
+        num_vsc_pipes = 32,
+        cs_shared_mem_size = 32 * 1024,
+        wave_granularity = 2,
+        fibers_per_sp = 128 * 2 * 16,
+        magic_regs = a730_magic_regs,
+        raw_magic_regs = a730_raw_magic_regs,
+    ))
+
+add_gpus([
+        GPUId(735)
+        GPUId(chip_id=0x43030B00, name="FD735"), # KGSL, no speedbin data
+        GPUId(chip_id=0xffff43030B00, name="FD735"), # Default no-speedbin fallback
+    ], A6xxGPUInfo(
+        CHIP.A7XX,
+        [a7xx_base, a7xx_735],
         num_ccu = 4,
         tile_align_w = 64,
         tile_align_h = 32,
