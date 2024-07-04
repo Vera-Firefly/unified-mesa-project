@@ -802,13 +802,11 @@ a7xx_730 = A7XXProps(
     )
 
 a7xx_735 = A7XXProps(
+        cmdbuf_start_a735_quirk = True,
+        stsc_duplication_quirk = True,
         has_event_write_sample_count = True,
-        load_inline_uniforms_via_preamble_ldgk = True,
-        load_shader_consts_via_preamble = True,
-        has_gmem_vpc_attr_buf = True,
-        sysmem_vpc_attr_buf_size = 0x20000,
-        gmem_vpc_attr_buf_size = 0xc000,
         ubwc_unorm_snorm_int_compatible = True,
+        supports_ibo_ubwc = True,
     )
 
 a7xx_740 = A7XXProps(
@@ -937,7 +935,7 @@ add_gpus([
     ], A6xxGPUInfo(
         CHIP.A7XX,
         [a7xx_base, a7xx_735],
-        num_ccu = 4,
+        num_ccu = 6,
         tile_align_w = 96,
         tile_align_h = 32,
         num_vsc_pipes = 32,
@@ -945,36 +943,29 @@ add_gpus([
         wave_granularity = 2,
         fibers_per_sp = 128 * 2 * 16,
         magic_regs = dict(
-            # PC_POWER_CNTL = 7,
             TPL1_DBG_ECO_CNTL = 0x11100000,
             GRAS_DBG_ECO_CNTL = 0x00004800,
-            SP_CHICKEN_BITS = 0x10001400,
-            UCHE_CLIENT_PF = 0x00000084,
-            # Blob uses 0x1f or 0x1f1f, however these values cause vertices
-            # corruption in some tests.
-            PC_MODE_CNTL = 0x0000003f,
+            SP_CHICKEN_BITS = 0x10000400,
+            PC_MODE_CNTL = 0x00003f1f,
             SP_DBG_ECO_CNTL = 0x10000000,
-            RB_DBG_ECO_CNTL = 0x00000000,
-            RB_DBG_ECO_CNTL_blit = 0x00000000,  # is it even needed?
-            # HLSQ_DBG_ECO_CNTL = 0x0,
+            RB_DBG_ECO_CNTL = 0x00000001,
+            RB_DBG_ECO_CNTL_blit = 0x00000001,
             RB_UNKNOWN_8E01 = 0x0,
             VPC_DBG_ECO_CNTL = 0x02000000,
-            UCHE_UNKNOWN_0E12 = 0x00000000,
+            UCHE_UNKNOWN_0E12 = 0x40000000,
 
-            RB_UNKNOWN_8E06 = 0x02080000,
+            RB_UNKNOWN_8E06 = 0x02082000,
         ),
         raw_magic_regs = [
-            [A6XXRegs.REG_A6XX_UCHE_CACHE_WAYS, 0x00040004],
-            [A6XXRegs.REG_A6XX_TPL1_DBG_ECO_CNTL1, 0x00000724],
-
-            [A6XXRegs.REG_A7XX_SP_UNKNOWN_AE08, 0x00000400],
-            [A6XXRegs.REG_A7XX_SP_UNKNOWN_AE09, 0x00430800],
-            [A6XXRegs.REG_A7XX_SP_UNKNOWN_AE0A, 0x00000000],
+            [A6XXRegs.REG_A6XX_UCHE_CACHE_WAYS, 0x00000000],
             [A6XXRegs.REG_A7XX_UCHE_UNKNOWN_0E10, 0x00000000],
-            [A6XXRegs.REG_A7XX_UCHE_UNKNOWN_0E11, 0x00000000],
+            [A6XXRegs.REG_A7XX_UCHE_UNKNOWN_0E11, 0x00000080],
+            [A6XXRegs.REG_A7XX_SP_UNKNOWN_AE08, 0x00000000],
+            [A6XXRegs.REG_A7XX_SP_UNKNOWN_AE09, 0x00431800],
+            [A6XXRegs.REG_A7XX_SP_UNKNOWN_AE0A, 0x00800000],
             [A6XXRegs.REG_A7XX_SP_UNKNOWN_AE6C, 0x00000000],
             [A6XXRegs.REG_A6XX_PC_DBG_ECO_CNTL, 0x00100000],
-            [A6XXRegs.REG_A7XX_PC_UNKNOWN_9E24, 0x21585600],
+            [A6XXRegs.REG_A7XX_PC_UNKNOWN_9E24, 0x01585600],
             [A6XXRegs.REG_A7XX_VFD_UNKNOWN_A600, 0x00008000],
             [A6XXRegs.REG_A7XX_SP_UNKNOWN_AE06, 0x00000000],
             [A6XXRegs.REG_A7XX_SP_UNKNOWN_AE6A, 0x00000000],
@@ -984,10 +975,8 @@ add_gpus([
             [A6XXRegs.REG_A7XX_SP_UNKNOWN_AB01, 0x00000000],
             [A6XXRegs.REG_A7XX_SP_UNKNOWN_AB22, 0x00000000],
             [A6XXRegs.REG_A7XX_SP_UNKNOWN_B310, 0x00000000],
-
             [A6XXRegs.REG_A7XX_GRAS_UNKNOWN_8120, 0x09510840],
             [A6XXRegs.REG_A7XX_GRAS_UNKNOWN_8121, 0x00000a62],
-
             [A6XXRegs.REG_A7XX_GRAS_UNKNOWN_8009, 0x00000000],
             [A6XXRegs.REG_A7XX_GRAS_UNKNOWN_800A, 0x00000000],
             [A6XXRegs.REG_A7XX_GRAS_UNKNOWN_800B, 0x00000000],
@@ -1004,7 +993,6 @@ add_gpus([
             [A6XXRegs.REG_A7XX_GRAS_UNKNOWN_810B, 0x3],
 
             [A6XXRegs.REG_A7XX_HLSQ_UNKNOWN_A9AC, 0x00000000],
-            [A6XXRegs.REG_A7XX_RB_UNKNOWN_8E79,   0x00000000],
             [A6XXRegs.REG_A7XX_RB_UNKNOWN_8899,   0x00000000],
             [A6XXRegs.REG_A7XX_RB_UNKNOWN_88F5,   0x00000000],
 
@@ -1012,6 +1000,11 @@ add_gpus([
             [A6XXRegs.REG_A6XX_RB_UNKNOWN_88F4,   0x00000000],
             [A6XXRegs.REG_A7XX_HLSQ_UNKNOWN_A9AD, 0x00000000],
             [A6XXRegs.REG_A7XX_GRAS_UNKNOWN_80F4, 0x00000000],
+
+            [0x930a, 0],
+            [0x960a, 1],
+            [A6XXRegs.REG_A7XX_SP_PS_ALIASED_COMPONENTS_CONTROL, 0],
+            [A6XXRegs.REG_A7XX_SP_PS_ALIASED_COMPONENTS, 0],
         ],
     ))
 
