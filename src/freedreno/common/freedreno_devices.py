@@ -810,7 +810,7 @@ a7xx_735 = A7XXProps(
         sysmem_vpc_attr_buf_size = 0x20000,
         gmem_vpc_attr_buf_size = 0xc000,
         ubwc_unorm_snorm_int_compatible = True,
-        supports_ibo_ubwc = True,
+        #supports_ibo_ubwc = True,
     )
 
 a7xx_740 = A7XXProps(
