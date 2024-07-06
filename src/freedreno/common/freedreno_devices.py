@@ -802,8 +802,8 @@ a7xx_730 = A7XXProps(
     )
 
 a7xx_735 = A7XXProps(
-        cmdbuf_start_a725_quirk = True,
-        #stsc_duplication_quirk = True,
+        #cmdbuf_start_a725_quirk = True,
+        stsc_duplication_quirk = True,
         has_event_write_sample_count = True,
         load_inline_uniforms_via_preamble_ldgk = True,
         load_shader_consts_via_preamble = True,
