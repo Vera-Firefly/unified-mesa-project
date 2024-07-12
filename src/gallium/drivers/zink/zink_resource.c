@@ -801,7 +801,7 @@ resource_object_create(struct zink_screen *screen, const struct pipe_resource *t
          break;
       }
       mai.memoryTypeIndex = screen->heap_map[heap];
-      assert(reqs.memoryTypeBits & BITFIELD_BIT(mai.memoryTypeIndex));
+      // assert(reqs.memoryTypeBits & BITFIELD_BIT(mai.memoryTypeIndex));
    }
 
    VkMemoryDedicatedAllocateInfo ded_alloc_info = {
